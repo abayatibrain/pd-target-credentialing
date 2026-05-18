@@ -41,9 +41,9 @@ viz = ["matplotlib>=3.8", "seaborn>=0.13", "plotly>=5.22"]
 pd-target-credentialing = "pd_target_credentialing.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/arminbayati/pd-target-credentialing"
-Documentation = "https://arminbayati.github.io/pd-target-credentialing/"
-Issues = "https://github.com/arminbayati/pd-target-credentialing/issues"
+Homepage = "https://github.com/abayatibrain/pd-target-credentialing"
+Documentation = "https://abayatibrain.github.io/pd-target-credentialing/"
+Issues = "https://github.com/abayatibrain/pd-target-credentialing/issues"
 
 [dependency-groups]
 dev = [

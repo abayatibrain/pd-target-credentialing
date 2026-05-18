@@ -2,7 +2,7 @@
 
 This is a portfolio repository maintained by Armin Bayati. External contributions
 are welcome but should expect that the maintainer will weigh changes against the
-overall portfolio direction (see the [Cowork brief](https://github.com/arminbayati/cowork-brief) — private).
+overall portfolio direction (see the [Cowork brief](https://github.com/abayatibrain/cowork-brief) — private).
 
 ## Ground rules
 1. Every non-trivial decision lives in an ADR under `docs/decisions/`.

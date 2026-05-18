@@ -2,7 +2,7 @@
 
 *Credentialing Parkinson's disease therapeutic targets by converging single-nucleus expression, human genetics, and tractability evidence — with calibrated confidence and full provenance.*
 
-This documentation site mirrors the [README on GitHub](https://github.com/arminbayati/pd-target-credentialing#readme),
+This documentation site mirrors the [README on GitHub](https://github.com/abayatibrain/pd-target-credentialing#readme),
 with additional pages for the biology primer, the architecture walkthrough,
 the auto-generated API reference, and the full ADR-style decision log.
 

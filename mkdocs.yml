@@ -1,8 +1,8 @@
 site_name: pd-target-credentialing
 site_description: End-to-end therapeutic-target credentialing for Parkinson's disease from public single-nucleus and evidence data.
-site_url: https://arminbayati.github.io/pd-target-credentialing/
-repo_url: https://github.com/arminbayati/pd-target-credentialing
-repo_name: arminbayati/pd-target-credentialing
+site_url: https://abayatibrain.github.io/pd-target-credentialing/
+repo_url: https://github.com/abayatibrain/pd-target-credentialing
+repo_name: abayatibrain/pd-target-credentialing
 edit_uri: edit/main/docs/
 
 theme:

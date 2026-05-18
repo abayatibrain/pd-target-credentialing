@@ -7,8 +7,8 @@ authors:
     given-names: "Armin"
     email: "a.bayati.brain@gmail.com"
     orcid: "https://orcid.org/0000-0000-0000-0000"
-repository-code: "https://github.com/arminbayati/pd-target-credentialing"
-url: "https://arminbayati.github.io/pd-target-credentialing/"
+repository-code: "https://github.com/abayatibrain/pd-target-credentialing"
+url: "https://abayatibrain.github.io/pd-target-credentialing/"
 license: MIT
 version: "0.1.0"
 date-released: "2026-05-18"

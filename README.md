@@ -2,7 +2,7 @@
 
 *Credentialing Parkinson's disease therapeutic targets by converging single-nucleus expression, human genetics, and tractability evidence — with calibrated confidence and full provenance.*
 
-[![CI](https://github.com/arminbayati/pd-target-credentialing/actions/workflows/ci.yml/badge.svg)](https://github.com/arminbayati/pd-target-credentialing/actions/workflows/ci.yml) ![License](https://img.shields.io/badge/License-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
+[![CI](https://github.com/abayatibrain/pd-target-credentialing/actions/workflows/ci.yml/badge.svg)](https://github.com/abayatibrain/pd-target-credentialing/actions/workflows/ci.yml) ![License](https://img.shields.io/badge/License-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
 
 ## What biological question this answers
 
@@ -50,7 +50,7 @@ flowchart TB
 ## Quickstart
 
 ```bash
-git clone https://github.com/arminbayati/pd-target-credentialing
+git clone https://github.com/abayatibrain/pd-target-credentialing
 cd pd-target-credentialing
 uv sync
 ./scripts/download_data.sh
@@ -120,7 +120,7 @@ See `CITATION.cff` for canonical metadata. BibTeX:
   author  = {{Bayati, Armin}},
   title   = {{pd-target-credentialing}},
   year    = {{2026}},
-  url     = {{https://github.com/arminbayati/pd-target-credentialing}},
+  url     = {{https://github.com/abayatibrain/pd-target-credentialing}},
   version = {{0.1.0}}
 }}
 ```
