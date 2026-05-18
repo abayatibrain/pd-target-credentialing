@@ -1,0 +1,17 @@
+{
+  "data": {
+    "search": {
+      "hits": [
+        {
+          "id": "ENSG00000145335",
+          "entity": "target",
+          "object": {
+            "id": "ENSG00000145335",
+            "approvedSymbol": "SNCA",
+            "biotype": "protein_coding"
+          }
+        }
+      ]
+    }
+  }
+}

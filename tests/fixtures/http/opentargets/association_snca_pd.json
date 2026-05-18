@@ -1,0 +1,19 @@
+{
+  "data": {
+    "target": {
+      "associatedDiseases": {
+        "rows": [
+          {
+            "disease": { "id": "EFO_0002508" },
+            "score": 0.91,
+            "datatypeScores": [
+              { "id": "genetic_association", "score": 0.95 },
+              { "id": "literature", "score": 0.88 },
+              { "id": "animal_model", "score": 0.70 }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "response": {
+    "numFound": 2,
+    "docs": [
+      {
+        "symbol": "GENE1",
+        "hgnc_id": "HGNC:1",
+        "ensembl_gene_id": "ENSG00000000001"
+      },
+      {
+        "symbol": "GENE2",
+        "hgnc_id": "HGNC:2",
+        "ensembl_gene_id": "ENSG00000000002"
+      }
+    ]
+  }
+}

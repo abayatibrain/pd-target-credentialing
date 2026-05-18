@@ -1,0 +1,10 @@
+{
+  "data": {
+    "target": {
+      "tractability": [
+        { "id": "sm_clinical", "modality": "smallMolecule", "value": true, "label": "Clinical precedence" },
+        { "id": "ab_clinical", "modality": "antibody", "value": false, "label": null }
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "response": {
+    "numFound": 1,
+    "docs": [
+      {
+        "symbol": "PRKN",
+        "hgnc_id": "HGNC:8607",
+        "ensembl_gene_id": "ENSG00000185345",
+        "entrez_id": "5071"
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "data": {
+    "meta": {
+      "name": "Open Targets Platform",
+      "dataVersion": { "year": 2024, "month": 6, "iteration": 0 },
+      "apiVersion": { "x": 4, "y": 0, "z": 0 }
+    }
+  }
+}
