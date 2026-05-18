@@ -1,0 +1,7 @@
+# Treat notebooks as text for diff but strip outputs via nbstripout
+*.ipynb filter=nbstripout
+
+# Large committed assets (figures only) → LFS
+results/**/*.png filter=lfs diff=lfs merge=lfs -text
+results/**/*.svg filter=lfs diff=lfs merge=lfs -text
+docs/assets/**/*.png filter=lfs diff=lfs merge=lfs -text

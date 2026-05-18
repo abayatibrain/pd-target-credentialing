@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "pd-target-credentialing"
+abstract: "End-to-end therapeutic-target credentialing for Parkinson's disease from public single-nucleus and evidence data."
+authors:
+  - family-names: "Bayati"
+    given-names: "Armin"
+    email: "a.bayati.brain@gmail.com"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/arminbayati/pd-target-credentialing"
+url: "https://arminbayati.github.io/pd-target-credentialing/"
+license: MIT
+version: "0.1.0"
+date-released: "2026-05-18"
+keywords:
+  - bioinformatics
+  - computational-biology
+  - neurodegeneration

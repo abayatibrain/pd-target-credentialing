@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual envs
+.venv/
+venv/
+ENV/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Type / lint caches
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# Notebooks
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs
+site/
+
+# Data — NEVER commit datasets (§2.6)
+*.h5ad
+*.h5
+*.parquet
+*.pt
+*.bin
+*.npz
+*.mtx
+data/raw/
+data/processed/
+data/cache/
+!data/README.md
+!data/.gitkeep
+
+# Large CSV/TSV — gate by size in CI, keep small fixtures
+*.csv
+*.tsv
+!tests/fixtures/**/*.csv
+!tests/fixtures/**/*.tsv
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Detect-secrets baseline
+.secrets.baseline.bak
