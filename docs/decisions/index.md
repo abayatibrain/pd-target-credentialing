@@ -9,27 +9,31 @@ The ADR template lives at [`templates/adr.md`](../templates/adr.md).
 
 ## Index — current ADRs
 
-### Biology / methodology (awaiting Armin sign-off — §1.3)
+### Biology / methodology (Armin-ratified 2026-05-18)
 
 | ADR | Title | Status |
 |-----|---------------------------------------------------------|--------|
-| [0001](0001.md) | Choice of primary substantia nigra dataset | Proposed |
-| [0002](0002.md) | Per-nucleus QC thresholds | Proposed |
-| [0003](0003.md) | Normalization (log1p vs scran vs SCT) | Proposed |
-| [0004](0004.md) | Batch integration (Harmony vs BBKNN vs scVI) | Proposed |
-| [0005](0005.md) | Cell-type annotation strategy | Proposed |
-| [0006](0006.md) | Differential expression method | Proposed |
-| [0007](0007.md) | Multiple-testing correction | Proposed |
-| [0008](0008.md) | OpenTargets evidence weighting and score formula | Proposed |
-| [0009](0009.md) | Confidence-score calibration via anchor genes | Proposed |
+| [0001](0001.md) | Choice of primary substantia nigra dataset | Accepted |
+| [0002](0002.md) | Per-nucleus QC thresholds | Accepted |
+| [0003](0003.md) | Normalization (log1p vs scran vs SCT) | Accepted |
+| [0004](0004.md) | Batch integration (Harmony vs BBKNN vs scVI) | Accepted |
+| [0005](0005.md) | Cell-type annotation strategy | Accepted |
+| [0006](0006.md) | Differential expression method | Accepted |
+| [0007](0007.md) | Multiple-testing correction | Accepted |
+| [0008](0008.md) | OpenTargets evidence weighting and score formula | Accepted |
+| [0009](0009.md) | Confidence-score calibration via anchor genes | Accepted |
 
-### Engineering (Cowork-decides per §1.3 — already accepted)
+### Engineering (Cowork-decides per §1.3)
 
 | ADR | Title | Status |
 |-----|---------------------------------------------------------|--------|
 | [0010](0010.md) | HGNC alias-resolver design | Accepted |
 | [0011](0011.md) | OpenTargets GraphQL client design | Accepted |
 | [0012](0012.md) | Reactome ContentService client design | Accepted |
+
+All twelve ADRs are now Accepted. The biology implementation phase begins
+next session. The full Armin response trail lives in
+[`../QUESTIONS.md`](../../QUESTIONS.md).
 
 ## Dependency graph
 

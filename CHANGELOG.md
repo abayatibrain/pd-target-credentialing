@@ -36,9 +36,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - STATUS.md updated for the ADR-sprint phase.
 
 ### Notes
-- ADRs 0001–0009 are in **Proposed — awaiting Armin sign-off** status.
-  Biology-touching code implementation does not begin until sign-off
-  lands in `QUESTIONS.md`.
+- ~~ADRs 0001–0009 are in **Proposed — awaiting Armin sign-off**
+  status.~~ **Updated 2026-05-18: all nine ADRs ratified by Armin. See
+  the sign-off entry below.** Biology-touching code implementation is
+  now unblocked.
+
+### ADR sign-off (Armin 2026-05-18)
+All nine biology / methodology ADRs flipped from **Proposed** to
+**Accepted**. Full response trail recorded inline in `QUESTIONS.md`
+(27 timestamped responses across Q1.1–Q9.4 and three cross-cutting
+items Q-X1/X2/X3). Substantive content changes from sign-off:
+
+- **ADR-0005**: DA subtypes (SOX6+ vulnerable vs CALB1+ less-vulnerable)
+  now **in scope for v1.0.0** (Q5.3).
+- **ADR-0006**: Donor genetic-ancestry PCs added to the covariate set
+  where dataset metadata supports them (Q6.3).
+- **ADR-0008**: Confirmed the genetic/literature/animal **triad-only**
+  scope for v1.0.0 — no OT drug or pathway channels added (Q8.3).
+  Cross-disease panel expanded to include ≥1 oncology and ≥1
+  inflammatory indication alongside AD/ALS/HD/FTD (Q-X1). All five
+  tractability axes shown (Q-X2).
+- **ADR-0009**: Positive anchor set expanded to **`{SNCA, GBA1, LRRK2,
+  PRKN, PINK1, VPS35, PARK7}`** (Q9.1). PARK7 is the HGNC approved
+  symbol for the historical DJ-1.
+- **HGNC alias substitutions**: now also appear as a footnote in every
+  rendered dossier (Q-X3), in addition to the WARNING log entry.
+
+Cross-references to these clarifications are inlined in the relevant
+ADR bodies under "Consequences" or alongside the original "Decision"
+sections, with `(Armin sign-off 2026-05-18)` tags.
+
+The decisions index (`docs/decisions/index.md`) and `STATUS.md` have
+been updated to reflect the new phase.
 
 ### Added — foundational modules (engineering, §1.3 Cowork-decides)
 - ADR-0010 — HGNC alias-resolver design (cache format, multi-mapping
