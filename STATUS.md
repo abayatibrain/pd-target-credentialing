@@ -1,81 +1,83 @@
-# Status — week of 2026-05-18
+# Status — week of 2026-05-19
 Repo: pd-target-credentialing
-Phase: **Implementation unblocked** — biology ADRs signed off; foundational
-modules landed; biology code can begin next session.
+Phase: **v0.2.0 biology layer landed** — annotation + DE pipeline ships
+on a toy fixture. Next slice is the real-data download path + the demo
+notebook + the score formula.
 
-## Completed this week
-- Initial scaffolding committed per §2.1 of the Cowork brief.
-- **Biology / methodology ADR sprint complete** — all nine §4.4
-  reasoning checkpoints (ADR-0001 through ADR-0009) drafted, refined via
-  the §1.4 two-pass critique, **and signed off by Armin on 2026-05-18.**
-  All are now in **Accepted** status with response trail in
-  [`QUESTIONS.md`](../QUESTIONS.md).
-- **Engineering ADRs complete and accepted** (§1.3 Cowork-decides):
-  ADR-0010 (HGNC), ADR-0011 (OpenTargets), ADR-0012 (Reactome).
-- **Foundational modules implemented:**
-  - `_http/` shared infrastructure (cache + retry).
-  - `io/hgnc.py` — HGNC alias resolver with on-disk cache and §3.4
-    alias-substitution logging.
-  - `evidence/opentargets.py` — versioned, cached, retried GraphQL
-    client.
-  - `evidence/reactome.py` — ContentService client, HGNC-clean
-    participant lists.
-- **Tests:** 34 tests, 100% mocked HTTP (respx), zero live calls.
-  Coverage: **93% across the four foundational modules** (every module
-  exceeds §2.4's 70% floor).
-- **CI green at commit `8258d90`** — lint, format, mypy, pytest with
-  scoped 70% coverage floor all passing.
+## Completed overnight (2026-05-19, autonomous)
+- **Toy AnnData fixture** committed at `tests/fixtures/toy_smajic.h5ad`
+  (~376 KB, 500 nuclei × 613 genes, 2 donors × 3 cell types). Generator
+  script at `tests/fixtures/make_toy_anndata.py` so reviewers can
+  reproduce the fixture deterministically.
+- **`annotate/markers.py`** — Armin-ratified ADR-0005 panel as a typed,
+  immutable Python data structure. 9 cell types, every symbol HGNC-clean.
+- **`qc/nuclei_qc.py`** — ADR-0002 thresholds (500 genes / 5% mito /
+  Scrublet). Per-sample retention rate reported; samples below 50%
+  retention flagged for review rather than silently dropped (brief §4.7).
+  Scrublet wrapped behind `try/except ImportError` so minimal CI images
+  still pass.
+- **`io/smajic2022.py` + `io/kamath2022.py`** — dual-mode loaders. Toy
+  mode reads the committed fixture; real mode raises NotImplementedError
+  with a clear pointer to the v0.2.0 download-implementation slice.
+  Kamath loader carries the SOX6+/CALB1+ subtype passthrough per
+  ADR-0005 Q5.3.
+- **`annotate/celltypes.py`** — marker-score-per-cluster with the 0.15
+  ambiguity-margin filter (ADR-0005 Q5.2). Ambiguous nuclei are flagged
+  in `obs["celltype_ambiguous"]` and excluded from downstream DE per
+  ADR-0005's consequences.
+- **`annotate/da_subtypes.py`** — DA-subtype cross-check skeleton (ADR-0005
+  Q5.3). v1.0.0 production semantics require the real Kamath embedding;
+  this commit ships the API contract and a toy-positional-alignment
+  path so downstream code is exercisable.
+- **`de/pseudobulk.py`** — pseudobulk aggregation per (donor × cell
+  type). 10-nuclei minimum per ADR-0006 Q6.2. Covariate set follows
+  Q6.3: condition + age + sex + PMI + auto-detected ancestry PCs.
+- **`de/pydeseq2_runner.py`** — pyDESeq2 wrapper. Heavy dep is optional
+  at the library layer; tests that need a live fit use
+  `pytest.importorskip("pydeseq2")`. The pipeline contract is fully
+  testable without the dep installed.
+- **`de/fdr.py`** — per-cell-type BH-FDR + global BH-FDR + a
+  `strong_evidence` flag (passes both). Pure scipy/numpy.
 
-## ADRs Accepted this week (Armin 2026-05-18)
-- ADR-0001 — Smajić 2022 primary, Kamath 2022 cross-cohort, Wang 2024
-  deferred past v1.0.0.
-- ADR-0002 — 500 genes/nucleus min, 5% max mito, Scrublet doublets.
-- ADR-0003 — log1p with library-size scaling to 1e4.
-- ADR-0004 — Harmony, integrating over donor (not disease).
-- ADR-0005 — marker-based primary annotation with Kamath DA cross-check;
-  DA subtypes (SOX6+/CALB1+) **in scope for v1.0.0**.
-- ADR-0006 — pseudobulk + pyDESeq2; covariates = condition + age + sex
-  + PMI + **donor genetic-ancestry PCs where metadata supports them**.
-- ADR-0007 — per-cell-type BH-FDR α=0.05 primary, global FDR reported
-  alongside.
-- ADR-0008 — composite score `(0.5 · genetic + 0.3 · literature + 0.2 ·
-  animal + bounded DE bonus ≤0.15)`. **Triad-only for v1.0.0** (no OT
-  drug or pathway channels). Cross-disease panel includes
-  non-neurodegenerative indications. All 5 tractability axes shown.
-- ADR-0009 — calibration with **expanded positive anchor set** `{SNCA,
-  GBA1, LRRK2, PRKN, PINK1, VPS35, PARK7}`; negative anchors
-  `{ACTB, GAPDH, HPRT1, RPL13A, UBC}`. Cohen's d ≥ 1.0 + CI ≥ 0.5 +
-  zero rank overlap is the pre-registered pass. Calibration failure
-  halts the v1.0.0 tag.
+## Test surface
+- 58 tests pass, 1 skipped (pydeseq2 not in the minimal CI image).
+- Coverage: **86.69%** across the implemented modules — every module
+  exceeds the §2.4 70% floor (lowest is `qc/nuclei_qc.py` at 79%,
+  highest is `_http/retry.py` at 100%).
+- All HTTP traffic is mocked (respx). No live network in CI.
 
-## Cross-cutting clarifications (Armin 2026-05-18)
-- Q-X1: cross-disease panel includes ≥1 oncology and ≥1 inflammatory
-  indication alongside the neurodegenerative comparators (AD, ALS, HD,
-  FTD).
-- Q-X2: all five tractability axes shown — small molecule, antibody,
-  PROTAC, ASO, gene therapy.
-- Q-X3: alias substitution log appears as a footnote in every dossier.
+## ADRs added or updated
+None this session — the 12 existing ADRs cover every decision made.
 
 ## Blockers and questions for Armin
-- **None blocking.** All decision-required items from QUESTIONS.md are
-  resolved. The biology implementation work is unblocked.
+- **None blocking.** Everything stayed within already-ratified ADR
+  boundaries. No new biology decisions were made; engineering choices
+  (e.g., toy-fixture design, pyDESeq2 importorskip pattern) are
+  documented in module docstrings.
 
-## Plan for next week (now unblocked)
-- Implement Smajić 2022 loader against a 500-nucleus toy fixture
-  committed under `tests/fixtures/`.
-- Implement Kamath 2022 cross-cohort loader (skeleton with subtype-label
-  passthrough).
-- Wire HGNC + OpenTargets + Reactome into a thin "evidence gather"
-  module against SNCA as a sample target; render a minimal dossier
-  card (no scoring yet).
-- Begin the demo notebook (`notebooks/01_demo.ipynb`) wiring the
-  end-to-end shape end-to-end on toy data.
-- Implement the DA-subtype cross-check against Kamath (per Q5.3) as a
-  v0.2.0 milestone.
+## Pending commit through GitHub Desktop
+Approximately 17 modified / new files. Suggested commit message:
+> `feat(biology): toy fixture + marker panel + QC + loaders + annotation + DE skeleton (ADRs 0002, 0005, 0006, 0007)`
+
+Local CI gauntlet results pre-commit:
+- ✓ ruff check
+- ✓ ruff format --check
+- ✓ mypy (15 source files)
+- ✓ pytest (58 passed, 1 skipped, 86.69% coverage)
+
+## Plan for the next session
+- Real-mode download path for Smajić 2022 + Kamath 2022 (GEO/SCP
+  fetcher with SHA256 verification, cache dir under
+  `$XDG_CACHE_HOME/pd_target_credentialing/`).
+- Wire the full pipeline end-to-end on the toy fixture in
+  `notebooks/01_demo.ipynb` (smoke run; one cell per pipeline stage).
+- Score formula (ADR-0008) — needs at least one real OT call to
+  sanity-check the anchor-gene rankings before locking in.
+- Calibration (ADR-0009) — depends on the score formula.
+- Dossier HTML rendering — once the first SNCA pass produces real
+  numbers.
 
 ## Burn rate
-- Hours this week: ~12 (scaffolding + biology ADR sprint + engineering
-  ADRs + foundational modules + tests + CI debugging + sign-off
-  processing).
-- Hours to `v0.1.0`: estimated 10-15 (Smajić + Kamath loaders, SNCA
-  evidence gather, demo notebook stub on toy data).
+- Hours this session: ~3 (toy fixture + 7 modules + tests + verification)
+- Hours to `v0.1.0`: ~4 (real-mode loaders + demo notebook + score
+  formula on toy data)

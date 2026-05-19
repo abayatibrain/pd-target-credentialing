@@ -6,6 +6,58 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added — biology layer (2026-05-19)
+- `tests/fixtures/toy_smajic.h5ad` — synthetic 500-nucleus AnnData
+  (2 donors × 3 cell types × 613 genes incl. the ADR-0005 marker panel,
+  PD-relevant genes, and housekeeping anchors). Deterministic generator
+  at `tests/fixtures/make_toy_anndata.py`.
+- `src/pd_target_credentialing/annotate/markers.py` — ADR-0005's
+  canonical nigra marker panel as a typed, immutable Python structure
+  (9 cell types). HGNC-validation helper.
+- `src/pd_target_credentialing/qc/nuclei_qc.py` — ADR-0002 thresholds
+  (500 genes / 5% mito / Scrublet). Per-sample retention reporting with
+  <50% flagging per brief §4.7. Scrublet wrapped behind ImportError
+  fallback so minimal CI passes without the heavy dep.
+- `src/pd_target_credentialing/io/smajic2022.py` — Smajić 2022 loader.
+  Toy mode reads the committed fixture; real mode (GEO download with
+  SHA256 verification) is a `NotImplementedError` placeholder for the
+  v0.2.0 milestone.
+- `src/pd_target_credentialing/io/kamath2022.py` — Kamath 2022
+  cross-cohort loader. Carries the SOX6+/CALB1+ subtype passthrough
+  per ADR-0005 Q5.3.
+- `src/pd_target_credentialing/annotate/celltypes.py` — marker-based
+  annotation with 0.15 ambiguity-margin filter (ADR-0005 Q5.2).
+- `src/pd_target_credentialing/annotate/da_subtypes.py` — DA-subtype
+  cross-check API contract (ADR-0005 Q5.3). v1.0.0 production semantics
+  require the real Kamath embedding; toy-positional alignment ships now
+  for plumbing tests.
+- `src/pd_target_credentialing/de/pseudobulk.py` — donor × cell-type
+  pseudobulk aggregation with 10-nucleus minimum (ADR-0006 Q6.2). Auto-
+  detects `ancestry_pc*` covariates per Q6.3.
+- `src/pd_target_credentialing/de/pydeseq2_runner.py` — pyDESeq2 wrapper
+  for the headline DE pipeline. Heavy dep is optional at the library
+  layer; integration tests use `pytest.importorskip("pydeseq2")`.
+- `src/pd_target_credentialing/de/fdr.py` — per-cell-type and global
+  BH-FDR per ADR-0007, plus a `strong_evidence` flag (passes both).
+- `tests/unit/test_biology_layer.py` — 22 new tests for the biology
+  modules. Brings total to 58 tests (+1 pyDESeq2 importorskip).
+
+### Changed — pre-commit + tooling
+- `pyproject.toml` — added `[[tool.mypy.overrides]]` block ignoring
+  missing stubs for scientific-Python libs (anndata, scanpy, scipy,
+  scrublet, harmonypy, pydeseq2, pandas).
+- `.gitignore` — exempted `tests/fixtures/**/*.h5ad` and `*.parquet`
+  from the default data-file exclusion (small synthetic fixtures are
+  allowed).
+- `.github/workflows/ci.yml` — extended mypy and pytest scopes to
+  cover the new biology modules.
+
+### Test surface as of this entry
+- 58 passing tests, 1 skipped (pydeseq2 absent in minimal CI image).
+- Coverage 86.69% across implemented modules; every module exceeds the
+  §2.4 70% floor.
+
 ### Added
 - Initial repository scaffolding per the Cowork brief §2.1.
 - CI workflow (lint + type + test + coverage), docs workflow, release workflow.

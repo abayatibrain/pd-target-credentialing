@@ -74,6 +74,11 @@ data/cache/
 !data/README.md
 !data/.gitkeep
 
+# Test fixtures are exempt — they're synthetic, small (<1MB), and deterministic.
+# The generator that produced them is also committed so reviewers can verify.
+!tests/fixtures/**/*.h5ad
+!tests/fixtures/**/*.parquet
+
 # Large CSV/TSV — gate by size in CI, keep small fixtures
 *.csv
 *.tsv

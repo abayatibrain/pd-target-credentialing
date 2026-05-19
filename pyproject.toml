@@ -93,6 +93,27 @@ warn_redundant_casts = true
 no_implicit_optional = true
 files = ["src"]
 
+# Scientific-Python libraries that ship without PEP-561 type stubs.
+# Adding them to ``ignore_missing_imports`` here keeps mypy from flagging
+# every `import anndata as ad` line while preserving strict checks on
+# our own code.
+[[tool.mypy.overrides]]
+module = [
+    "anndata",
+    "anndata.*",
+    "scanpy",
+    "scanpy.*",
+    "scipy",
+    "scipy.*",
+    "scrublet",
+    "harmonypy",
+    "pydeseq2",
+    "pydeseq2.*",
+    "pandas",
+    "pandas.*",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"

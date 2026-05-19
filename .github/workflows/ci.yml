@@ -24,26 +24,44 @@ jobs:
       - name: Ruff format check
         run: uv run ruff format --check src tests
       - name: Mypy
-        # Mypy is scoped to implemented modules during the
-        # ADR-driven build-out phase. As biology code lands, this list
-        # expands. Tracked in CHANGELOG.
+        # Mypy is scoped to implemented modules during the ADR-driven
+        # build-out phase. As biology code lands, this list expands.
+        # Tracked in CHANGELOG.
         run: |
           uv run mypy \
             src/pd_target_credentialing/_http \
             src/pd_target_credentialing/io/hgnc.py \
+            src/pd_target_credentialing/io/smajic2022.py \
+            src/pd_target_credentialing/io/kamath2022.py \
             src/pd_target_credentialing/evidence/opentargets.py \
-            src/pd_target_credentialing/evidence/reactome.py
+            src/pd_target_credentialing/evidence/reactome.py \
+            src/pd_target_credentialing/annotate/markers.py \
+            src/pd_target_credentialing/annotate/celltypes.py \
+            src/pd_target_credentialing/annotate/da_subtypes.py \
+            src/pd_target_credentialing/qc/nuclei_qc.py \
+            src/pd_target_credentialing/de/pseudobulk.py \
+            src/pd_target_credentialing/de/fdr.py \
+            src/pd_target_credentialing/de/pydeseq2_runner.py
       - name: Pytest
-        # Coverage is scoped to implemented modules for the same reason
-        # as mypy above. The §2.4 70% floor applies to *implemented*
-        # code, not to the stub tree. Stub modules light up as they
-        # are implemented; their --cov= path lands in the same commit.
+        # Coverage is scoped to implemented modules; the §2.4 70% floor
+        # applies to *implemented* code, not to the stub tree. Stub
+        # modules light up as they're implemented; their --cov= path
+        # lands in the same commit.
         run: |
           uv run pytest \
             --cov=pd_target_credentialing._http \
             --cov=pd_target_credentialing.io.hgnc \
+            --cov=pd_target_credentialing.io.smajic2022 \
+            --cov=pd_target_credentialing.io.kamath2022 \
             --cov=pd_target_credentialing.evidence.opentargets \
             --cov=pd_target_credentialing.evidence.reactome \
+            --cov=pd_target_credentialing.annotate.markers \
+            --cov=pd_target_credentialing.annotate.celltypes \
+            --cov=pd_target_credentialing.annotate.da_subtypes \
+            --cov=pd_target_credentialing.qc.nuclei_qc \
+            --cov=pd_target_credentialing.de.pseudobulk \
+            --cov=pd_target_credentialing.de.fdr \
+            --cov=pd_target_credentialing.de.pydeseq2_runner \
             --cov-report=xml \
             --cov-fail-under=70
       - name: Upload coverage
