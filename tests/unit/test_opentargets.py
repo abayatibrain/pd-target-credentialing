@@ -1,4 +1,5 @@
 """Tests for the OpenTargets GraphQL client. All HTTP via respx mocks."""
+
 from __future__ import annotations
 
 import json
@@ -96,9 +97,11 @@ def test_graphql_errors_raise(tmp_path: Path) -> None:
         return httpx.Response(200, json=next(payloads))
 
     respx.post(OPENTARGETS_DEFAULT_URL).mock(side_effect=_responder)
-    with OpenTargetsClient(cache_dir=tmp_path) as ot:
-        with pytest.raises(OpenTargetsError):
-            ot.get_target_by_symbol("SNCA")
+    with (
+        OpenTargetsClient(cache_dir=tmp_path) as ot,
+        pytest.raises(OpenTargetsError),
+    ):
+        ot.get_target_by_symbol("SNCA")
 
 
 @respx.mock
@@ -126,4 +129,6 @@ def test_response_is_cached_across_clients(tmp_path: Path) -> None:
         ot.get_target_by_symbol("SNCA")
     # The new client made the meta call (1) but reused the cached target hit.
     # If caching is broken, this would be 2 instead of 1.
-    assert route.call_count - first_calls == 0  # original mock no longer in use; new mock counts elsewhere
+    assert (
+        route.call_count - first_calls == 0
+    )  # original mock no longer in use; new mock counts elsewhere

@@ -4,6 +4,7 @@ This is the `[project.scripts]` entrypoint. Every operation that a notebook
 would invoke must also be reachable from this CLI, so the repo is usable
 without opening Jupyter.
 """
+
 from __future__ import annotations
 
 import logging

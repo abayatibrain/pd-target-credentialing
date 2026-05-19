@@ -23,6 +23,7 @@ Example
 >>> # result = resolver.resolve("PARK2")  # legacy alias for PRKN
 >>> # assert result.approved_symbol == "PRKN"
 """
+
 from __future__ import annotations
 
 import csv
@@ -199,9 +200,7 @@ class HGNCResolver:
         """
         r = self.resolve(symbol)
         if r.match_type == MatchType.MULTI_MAPPING:
-            raise MultiMappingError(
-                f"{symbol!r} maps to multiple approved symbols: {r.candidates}"
-            )
+            raise MultiMappingError(f"{symbol!r} maps to multiple approved symbols: {r.candidates}")
         if r.match_type == MatchType.NOT_FOUND or r.approved_symbol is None:
             raise KeyError(f"{symbol!r} not found in HGNC")
         return r.approved_symbol

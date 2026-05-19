@@ -1,4 +1,5 @@
 """Tests for the shared _http helpers (cache + retry)."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -11,7 +12,6 @@ from pd_target_credentialing._http import (
     http_retry,
     request_signature,
 )
-
 
 # ---------- request_signature ------------------------------------------
 

@@ -1,4 +1,5 @@
 """Smoke test: import + version + CLI invocation."""
+
 from __future__ import annotations
 
 from typer.testing import CliRunner

@@ -15,11 +15,13 @@ This module deliberately does **not** implement the score-aggregation
 logic. That is ADR-0008's territory and is pending Armin sign-off. Here
 we only fetch and return the raw evidence channels.
 """
+
 from __future__ import annotations
 
 import json
 import logging
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -73,7 +75,9 @@ class TargetSummary(BaseModel):
 
     id: str
     """OpenTargets Ensembl-anchored target ID (e.g., ``"ENSG00000145335"``)."""
-    approvedSymbol: str  # noqa: N815 — matches the GraphQL field name
+    # Field name matches the GraphQL field; the camelCase deviation from
+    # PEP 8 is deliberate and the N815 ruff rule is not enabled.
+    approvedSymbol: str
     biotype: str | None = None
 
 
@@ -125,14 +129,12 @@ class OpenTargetsClient:
 
     def __init__(
         self,
-        cache_dir,
+        cache_dir: Path,
         *,
         base_url: str = OPENTARGETS_DEFAULT_URL,
         transport: httpx.BaseTransport | None = None,
         timeout: float = 15.0,
     ) -> None:
-        from pathlib import Path
-
         self._cache_dir = Path(cache_dir)
         self._cache_dir.mkdir(parents=True, exist_ok=True)
         self._cache = DiskCache(self._cache_dir / "http")
@@ -202,9 +204,7 @@ class OpenTargetsClient:
         }
         """
         payload = self._post(query, {"q": symbol})
-        hits = (
-            ((payload.get("data") or {}).get("search") or {}).get("hits") or []
-        )
+        hits = ((payload.get("data") or {}).get("search") or {}).get("hits") or []
         for hit in hits:
             obj = hit.get("object") or {}
             if (
@@ -214,9 +214,7 @@ class OpenTargetsClient:
                 return TargetSummary.model_validate(obj)
         return None
 
-    def get_association_by_datatype(
-        self, target_id: str, disease_id: str
-    ) -> AssociationByDatatype:
+    def get_association_by_datatype(self, target_id: str, disease_id: str) -> AssociationByDatatype:
         """Get per-datatype association scores for a target-disease pair.
 
         Parameters
@@ -247,13 +245,8 @@ class OpenTargetsClient:
         """
         payload = self._post(query, {"t": target_id, "d": disease_id})
         rows = (
-            (
-                ((payload.get("data") or {}).get("target") or {})
-                .get("associatedDiseases")
-                or {}
-            ).get("rows")
-            or []
-        )
+            ((payload.get("data") or {}).get("target") or {}).get("associatedDiseases") or {}
+        ).get("rows") or []
         if not rows:
             return AssociationByDatatype(
                 target_id=target_id,

@@ -1,4 +1,5 @@
 """Pytest configuration and shared fixtures for pd_target_credentialing."""
+
 from __future__ import annotations
 
 from pathlib import Path

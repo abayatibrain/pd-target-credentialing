@@ -7,6 +7,7 @@ explaining *why* this value, not just what.
 The defaults reflect the values committed to in ADR-0001 and subsequent ADRs.
 If you want to change a default, write a superseding ADR first.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

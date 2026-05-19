@@ -14,6 +14,7 @@ symbols are routed through :class:`HGNCResolver` (ADR-0010) so the
 caller always receives approved HGNC symbols; anything that fails to
 resolve is dropped with a ``WARNING``.
 """
+
 from __future__ import annotations
 
 import json

@@ -1,4 +1,5 @@
 """Tests for the Reactome ContentService client. No live HTTP."""
+
 from __future__ import annotations
 
 import json
@@ -28,24 +29,28 @@ def _fix(p: Path, name: str) -> dict | list | str:
 
 @respx.mock
 def test_get_version(tmp_path: Path) -> None:
-    route = respx.get(
-        f"{REACTOME_DEFAULT_URL}/data/database/version"
-    ).mock(return_value=httpx.Response(200, text=str(_fix(REACTOME_FIX, "version.txt"))))
-    with HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc:
-        with ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc:
-            v = rc.get_version()
+    route = respx.get(f"{REACTOME_DEFAULT_URL}/data/database/version").mock(
+        return_value=httpx.Response(200, text=str(_fix(REACTOME_FIX, "version.txt")))
+    )
+    with (
+        HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc,
+        ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc,
+    ):
+        v = rc.get_version()
     assert route.called
     assert v == "88"
 
 
 @respx.mock
 def test_get_pathway(tmp_path: Path) -> None:
-    respx.get(
-        f"{REACTOME_DEFAULT_URL}/data/query/{PATHWAY_PINK1_PARKIN_MITOPHAGY}"
-    ).mock(return_value=httpx.Response(200, json=_fix(REACTOME_FIX, "pathway_5205647.json")))
-    with HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc:
-        with ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc:
-            p = rc.get_pathway(PATHWAY_PINK1_PARKIN_MITOPHAGY)
+    respx.get(f"{REACTOME_DEFAULT_URL}/data/query/{PATHWAY_PINK1_PARKIN_MITOPHAGY}").mock(
+        return_value=httpx.Response(200, json=_fix(REACTOME_FIX, "pathway_5205647.json"))
+    )
+    with (
+        HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc,
+        ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc,
+    ):
+        p = rc.get_pathway(PATHWAY_PINK1_PARKIN_MITOPHAGY)
     assert p.id == PATHWAY_PINK1_PARKIN_MITOPHAGY
     assert "PINK1/Parkin" in p.name
     assert p.species == "Homo sapiens"
@@ -58,7 +63,9 @@ def test_get_pathway_participants_resolves_aliases(tmp_path: Path) -> None:
     # OPTN → OPTN. Final set: {PRKN, PINK1, OPTN}.
     respx.get(
         f"{REACTOME_DEFAULT_URL}/data/pathway/{PATHWAY_PINK1_PARKIN_MITOPHAGY}/containedEvents"
-    ).mock(return_value=httpx.Response(200, json=_fix(REACTOME_FIX, "contained_events_5205647.json")))
+    ).mock(
+        return_value=httpx.Response(200, json=_fix(REACTOME_FIX, "contained_events_5205647.json"))
+    )
     respx.get(
         f"{REACTOME_DEFAULT_URL}/data/participants/{PATHWAY_PINK1_PARKIN_MITOPHAGY}/referenceEntities"
     ).mock(return_value=httpx.Response(200, json=_fix(REACTOME_FIX, "participants_5205647.json")))
@@ -105,9 +112,11 @@ def test_get_pathway_participants_resolves_aliases(tmp_path: Path) -> None:
         )
     )
 
-    with HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc:
-        with ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc:
-            symbols = rc.get_pathway_participants(PATHWAY_PINK1_PARKIN_MITOPHAGY)
+    with (
+        HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc,
+        ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc,
+    ):
+        symbols = rc.get_pathway_participants(PATHWAY_PINK1_PARKIN_MITOPHAGY)
 
     # Deduplicated approved symbols.
     assert symbols == sorted({"PRKN", "PINK1", "OPTN"})
@@ -115,12 +124,14 @@ def test_get_pathway_participants_resolves_aliases(tmp_path: Path) -> None:
 
 @respx.mock
 def test_reactome_request_failure_raises(tmp_path: Path) -> None:
-    respx.get(
-        f"{REACTOME_DEFAULT_URL}/data/query/R-HSA-MISSING"
-    ).mock(return_value=httpx.Response(404, text="not found"))
-    with HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc:
-        with ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc:
-            from pd_target_credentialing.evidence.reactome import ReactomeError
+    respx.get(f"{REACTOME_DEFAULT_URL}/data/query/R-HSA-MISSING").mock(
+        return_value=httpx.Response(404, text="not found")
+    )
+    from pd_target_credentialing.evidence.reactome import ReactomeError
 
-            with pytest.raises(ReactomeError):
-                rc.get_pathway("R-HSA-MISSING")
+    with (
+        HGNCResolver(cache_dir=tmp_path / "hgnc") as hgnc,
+        ReactomeClient(cache_dir=tmp_path / "reactome", hgnc_resolver=hgnc) as rc,
+        pytest.raises(ReactomeError),
+    ):
+        rc.get_pathway("R-HSA-MISSING")

@@ -20,6 +20,7 @@ Example
 ...     payload = b'{"result": "..."}'
 ...     cache.put(sig, payload)
 """
+
 from __future__ import annotations
 
 import hashlib

@@ -1,4 +1,5 @@
 """Tests for the HGNC resolver. No live HTTP — all calls are respx-mocked."""
+
 from __future__ import annotations
 
 import json
@@ -41,15 +42,15 @@ def test_resolve_approved_symbol(tmp_path: Path) -> None:
 
 
 @respx.mock
-def test_resolve_alias_emits_warning(
-    tmp_path: Path, caplog: pytest.LogCaptureFixture
-) -> None:
+def test_resolve_alias_emits_warning(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
     respx.get(f"{HGNC_REST_BASE}/search/symbol/PARK2").mock(
         return_value=httpx.Response(200, json=_load_fixture("park2_alias.json"))
     )
-    with caplog.at_level(logging.WARNING, logger="pd_target_credentialing.io.hgnc"):
-        with HGNCResolver(cache_dir=tmp_path) as r:
-            result = r.resolve("PARK2")
+    with (
+        caplog.at_level(logging.WARNING, logger="pd_target_credentialing.io.hgnc"),
+        HGNCResolver(cache_dir=tmp_path) as r,
+    ):
+        result = r.resolve("PARK2")
     assert result.match_type == MatchType.ALIAS
     assert result.approved_symbol == "PRKN"
     # The substitution must surface at WARNING (per §3.4).
@@ -88,9 +89,11 @@ def test_resolve_multi_mapping_does_not_silently_pick(
     respx.get(f"{HGNC_REST_BASE}/search/symbol/AMBIG").mock(
         return_value=httpx.Response(200, json=_load_fixture("multi_mapping.json"))
     )
-    with caplog.at_level(logging.ERROR, logger="pd_target_credentialing.io.hgnc"):
-        with HGNCResolver(cache_dir=tmp_path) as r:
-            result = r.resolve("AMBIG")
+    with (
+        caplog.at_level(logging.ERROR, logger="pd_target_credentialing.io.hgnc"),
+        HGNCResolver(cache_dir=tmp_path) as r,
+    ):
+        result = r.resolve("AMBIG")
     assert result.match_type == MatchType.MULTI_MAPPING
     assert result.approved_symbol is None
     assert sorted(result.candidates) == ["GENE1", "GENE2"]
@@ -102,9 +105,8 @@ def test_resolve_strict_raises_on_multi_mapping(tmp_path: Path) -> None:
     respx.get(f"{HGNC_REST_BASE}/search/symbol/AMBIG").mock(
         return_value=httpx.Response(200, json=_load_fixture("multi_mapping.json"))
     )
-    with HGNCResolver(cache_dir=tmp_path) as r:
-        with pytest.raises(MultiMappingError):
-            r.resolve_strict("AMBIG")
+    with HGNCResolver(cache_dir=tmp_path) as r, pytest.raises(MultiMappingError):
+        r.resolve_strict("AMBIG")
 
 
 @respx.mock
@@ -112,9 +114,8 @@ def test_resolve_strict_raises_keyerror_on_not_found(tmp_path: Path) -> None:
     respx.get(f"{HGNC_REST_BASE}/search/symbol/NOSUCHGENE").mock(
         return_value=httpx.Response(200, json=_load_fixture("not_found.json"))
     )
-    with HGNCResolver(cache_dir=tmp_path) as r:
-        with pytest.raises(KeyError):
-            r.resolve_strict("NOSUCHGENE")
+    with HGNCResolver(cache_dir=tmp_path) as r, pytest.raises(KeyError):
+        r.resolve_strict("NOSUCHGENE")
 
 
 # ---------- caching ----------------------------------------------------

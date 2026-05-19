@@ -6,6 +6,7 @@ retry is intentionally bounded — an unbounded backoff would hang the
 pipeline on a sustained outage, which is worse than a clean failure
 that the dossier renderer can report.
 """
+
 from __future__ import annotations
 
 import logging
@@ -86,7 +87,7 @@ def http_retry(
 
     def call(*args: object, **kwargs: object) -> T:
         try:
-            return wrapped(*args, **kwargs)  # type: ignore[no-any-return]
+            return wrapped(*args, **kwargs)
         except RetryError as e:
             last_exc = e.last_attempt.exception() if e.last_attempt else None
             logger.error(
