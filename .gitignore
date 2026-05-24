@@ -94,3 +94,6 @@ data/cache/
 
 # Detect-secrets baseline
 .secrets.baseline.bak
+
+# Editor / sed-backup leftovers
+*.bak
