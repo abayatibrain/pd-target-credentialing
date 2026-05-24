@@ -166,7 +166,7 @@ def test_kamath_toy_mode_returns_subtype_column() -> None:
 
 
 def test_annotation_recovers_known_cell_types(toy_adata: ad.AnnData) -> None:
-    filtered, _ = apply_qc(toy_adata)
+    filtered, _ = apply_qc(toy_adata, _TOY_QC)
     annotated = annotate_celltypes(filtered)
     assert "celltype" in annotated.obs.columns
     assert "celltype_confidence" in annotated.obs.columns
@@ -309,7 +309,7 @@ def test_pydeseq2_smoke(toy_adata: ad.AnnData) -> None:
     pytest.importorskip("pydeseq2")
     from pd_target_credentialing.de.pydeseq2_runner import run_pydeseq2_per_celltype
 
-    filtered, _ = apply_qc(toy_adata)
+    filtered, _ = apply_qc(toy_adata, _TOY_QC)
     annotated = annotate_celltypes(filtered)
     pseudobulks = aggregate_pseudobulks(annotated)
     results = run_pydeseq2_per_celltype(pseudobulks)
